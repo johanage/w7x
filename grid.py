@@ -47,6 +47,12 @@ class grid:
             ngrid_cart = 100
         
         ivl_p = int(inc_p[1] - inc_p[0])
+        #chunking = 4
+        #chunkingids = 0,0,0
+        """self.cart_x, self.cart_y, self.cart_z = np.meshgrid(np.linspace(np.min(self.tor_x),np.max(self.tor_x)[ngrid_cart // chunking*chunkingids[0]:ngrid_cart // chunking*(chunkingids[0]+1)], ngrid_cart), 
+                                                            np.linspace(np.min(self.tor_y),np.max(self.tor_y), ngrid_cart), 
+                                                            np.linspace(np.min(self.tor_z),np.max(self.tor_z), ngrid_cart),
+                                                            indexing = "ij")"""
         self.cart_x, self.cart_y, self.cart_z = np.meshgrid(np.linspace(np.min(self.tor_x),np.max(self.tor_x), ngrid_cart), 
                                                             np.linspace(np.min(self.tor_y),np.max(self.tor_y), ngrid_cart), 
                                                             np.linspace(np.min(self.tor_z),np.max(self.tor_z), ngrid_cart),
