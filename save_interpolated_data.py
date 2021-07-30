@@ -22,13 +22,14 @@ def parammesh_timeseries_readfile(filename, pmesh_timeseries_shape):
     Out:
      - trec, list of list of ndarray np.float64, recreaction of pmesh_timeseries
     """
+    import numpy as np
     try:
         file = open(filename + '.npy', 'rb')
         trec = []
         for i in range(pmesh_timeseries_shape[0]):
             rrec = []
             for j in range(pmesh_timeseries_shape[1]):
-                import numpy as np
+                
                 load = np.load(file, allow_pickle=True)
                 rrec.append(load)
             trec.append(rrec)
