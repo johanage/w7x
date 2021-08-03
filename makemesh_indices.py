@@ -12,8 +12,6 @@ def make_parammesh_vtk_indices(grid_obj, sgrid, skip_coarsegrid = 10, sp = (29,2
     import vtk
     from tvtk.api import tvtk
     import itertools
-    # need to have grid.py in the same folder as this py file
-    from grid import grid
     # store only the necessary grids and then delete the grid obj
     gcartx = grid_obj.cart_x
     gcarty = grid_obj.cart_y
@@ -77,7 +75,7 @@ def make_parammesh_vtk_indices(grid_obj, sgrid, skip_coarsegrid = 10, sp = (29,2
         #if find_cell returns -1 there is either a numerical error or it did not find the point in that cell
         if not found:
             print("guessing startpoint")
-            cs = tuple(np.random.randint(low = 0, high = max(gtorx.shape), size = 3))
+            cs = tuple(np.random.randint(low = 0, high = gcartx.shape[0]-1, size = 3))
             todo.append(cs)
     return parammesh_indices, parammesh_weights
 
