@@ -39,16 +39,10 @@ class grid:
             ngrid_cart = 100
         
         ivl_p = int(inc_p[1] - inc_p[0])
-        chunking = 2
-        chunkingids = (2,3,4)
         self.cart_x, self.cart_y, self.cart_z = np.meshgrid(np.linspace(np.min(self.tor_x),np.max(self.tor_x), ngrid_cart), 
                                                             np.linspace(np.min(self.tor_y),np.max(self.tor_y), ngrid_cart), 
                                                             np.linspace(np.min(self.tor_z),np.max(self.tor_z), ngrid_cart),
                                                             indexing = "ij")
-        """self.cart_x, self.cart_y, self.cart_z = np.meshgrid(np.linspace(np.min(self.tor_x),np.max(self.tor_x), ngrid_cart), 
-                                                            np.linspace(np.min(self.tor_y),np.max(self.tor_y), ngrid_cart), 
-                                                            np.linspace(np.min(self.tor_z),np.max(self.tor_z), ngrid_cart),
-                                                            indexing = "ij")"""
      
         self.cartflat = np.ones((self.cart_x.shape[0]*self.cart_x.shape[1]*self.cart_x.shape[2], 3) )*np.nan
         self.cartflat[:,0] = self.cart_x.flatten()
@@ -59,3 +53,16 @@ class grid:
         self.torflat[:,0] = self.tor_x.flatten()
         self.torflat[:,1] = self.tor_y.flatten()
         self.torflat[:,2] = self.tor_z.flatten()
+    
+    def delete_all(self):
+        del self.R
+        del self.theta
+        del self.phi
+        del self.tor_x
+        del self.tor_y
+        del self.tor_z
+        del self.cart_x
+        del self.cart_y
+        del self.cart_z
+        del self.cartflat
+        del self.torflat
