@@ -47,6 +47,7 @@ def make_parammesh_vtk_indices(grid_obj, sgrid, skip_coarsegrid = 10, sp = (29,2
         #find the cell p is interior to
         cid = sgrid.find_cell([gcartx[cur], gcarty[cur], gcartz[cur]], 
                               cell, cid, tol2, subid, pcoord, weights)
+        # mark as checked
         cids[cur] = 1
         if cid >= 0:
             found = True
@@ -59,39 +60,43 @@ def make_parammesh_vtk_indices(grid_obj, sgrid, skip_coarsegrid = 10, sp = (29,2
                 if outofbounds:
                     continue
                 if cids[nxt] == -2:
+                    # mark as added
                     cids[nxt] = -3
                     todo.append(nxt)
             # unravel index of each vertex of the cell found from the toroidal grid
             ir, it, ip = np.unravel_index(cid, grid_of_cells_shape)
             idx = np.zeros((2,2,2), dtype=int)
             for d_ir, dit, dip in itertools.product(range(2), repeat=3):
+                # assign index of coord to vertex
                 idx[d_ir, dit, dip] = np.ravel_multi_index((ir+d_ir,it+dit,ip+dip), gtorx.shape)
+            # flatten from 2,2,2 to 8
             idx.shape = 8
             #represents the indices of the flattened parametermesh on the emc3 grid structure
-#             print(parammesh_indices.shape, parammesh_indices.dtype, cur, type(cur), idx, idx.dtype, weights, weights.dtype)
             parammesh_indices[cur] = idx
             # represents the weights corresponding to the parameter indices above
             parammesh_weights[cur] = weights
         #if find_cell returns -1 there is either a numerical error or it did not find the point in that cell
         if not found:
             print("guessing startpoint")
+            # random drawn index as startpoint and append to points to check for(todo)
             cs = tuple(np.random.randint(low = 0, high = gcartx.shape[0]-1, size = 3))
             todo.append(cs)
     return parammesh_indices, parammesh_weights
 
 def from_indices_to_paramvals(idxs, weights, param_torgrid):
     """
-    Current problem is that it is not identical to the former method where the the parametervalues are extracted
-    rather than the indices of the toroidal grid.
+    Converts indices and weights of vertices of gridcells to scalar values of the field param_torgrid
+    Args:
+    - idxs, ndarray np.int64, dims=(n,n,n,8), an index represents the coord index of the flattened toroidal mesh
+    - weights, ndarrat np.float64, dims(n,n,n,8), weights corresponding to each vertex of the cell
     """
     #imports for importing to external file later
     import numpy as np
-    import sparse
     # shape pmesh as (50,50,50), if ngrid = 50
     pmesh = np.ones(idxs.shape[:3], dtype=np.float64)*np.nan
-    # make a flattened array of sum of indices of all vertices in the cell, if any is nan then discard the cell
-    irav = np.sum(idxs, axis = 3).ravel()
-    # store indices of indices which are numbers in a flattened structjupyter labextension install @jupyter-widgets/jupyterlab-managerure
+    # make a flattened array of sum of weights of all vertices in the cell, if any is nan then discard the cell
+    irav = np.sum(weights, axis = 3).ravel()
+    # store indices of indices which are numbers in a flattened structure
     isnotnan = np.where(np.isnan(irav) == False)[0]
     del irav
     # array of indexes that is not nanvalued
