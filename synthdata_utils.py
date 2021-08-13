@@ -3,8 +3,8 @@ def scalar_field(R, theta, phi, nmodes_phi = 10, nmodes_theta = 10, R0 = 2):
     import numpy as np
     field = np.zeros(R.shape)
     field = nmodes_theta*np.exp(-(R-R0))
-    field+= np.sum(np.array([np.cos(nmodes_phi*theta + 0.5*j/np.pi) for j in range(1,nmodes_theta+1)]), axis = 0)
-    field+= np.sum(np.array([np.cos(nmodes_phi*phi + 0.5*i/np.pi) for i in range(1,nmodes_phi+1)]), axis = 0)
+    field+= np.sum(np.array([np.cos(nmodes_theta*theta*j + 0.5*j/np.pi) for j in range(1,nmodes_theta+1)]), axis = 0)
+    field+= np.sum(np.array([np.cos(nmodes_phi*phi*i + 0.5*i/np.pi) for i in range(1,nmodes_phi+1)]), axis = 0)
     return field
 
 def onemode_scalar_field(R, theta, phi, nmodes_phi = 1, nmodes_theta = 1, R0 = 2):
