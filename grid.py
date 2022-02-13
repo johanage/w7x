@@ -30,8 +30,7 @@ class grid:
                                                                                                inc_p[0]:inc_p[1]]
 
         
-        self.phi = np.asarray( ds.phi_bounds.mean(dim="delta_phi") )[inc_p[0]:inc_p[1]]
-
+        self.phi = np.asarray( ds.phi_bounds.mean(dim="delta_phi") )[inc_p[0]:inc_p[1]]*np.ones(self.R.shape)
         
         self.tor_x = np.asarray( self.R * np.cos(self.phi) )
         self.tor_y = np.asarray( self.R * np.sin(self.phi) )
@@ -53,6 +52,11 @@ class grid:
         self.torflat[:,0] = self.tor_x.flatten()
         self.torflat[:,1] = self.tor_y.flatten()
         self.torflat[:,2] = self.tor_z.flatten()
+        
+        self.cyl_flat = np.ones((self.R.shape[0]*self.R.shape[1]*self.R.shape[2], 3))*np.nan
+        self.cyl_flat[:,0] = self.R.flatten()
+        self.cyl_flat[:,1] = self.tor_z.flatten()
+        self.cyl_flat[:,2] = self.phi.flatten()
     
     def delete_all(self):
         del self.R
@@ -66,3 +70,4 @@ class grid:
         del self.cart_z
         del self.cartflat
         del self.torflat
+        del self.cyl_flat
